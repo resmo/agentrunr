@@ -1,0 +1,77 @@
+<div id="onboarding-step" class="step-fragment">
+    <p class="is-uppercase has-text-weight-semibold has-text-grey is-size-7 mb-3">Step {{ currentStepNumber }} of {{ totalSteps }}</p>
+    <h2 class="title is-3 mb-3">Connect MQTT.</h2>
+    <p class="subtitle is-5 has-text-grey-dark">
+        Configure a single MQTT topic for incoming instructions and one default topic or topic prefix for outgoing replies.
+        If a message starts with <code>reply-topic: your/topic</code> on the first line, replies will be published to that topic instead.
+    </p>
+
+    {% if error %}
+    <article class="message is-danger">
+        <div class="message-body">{{ error }}</div>
+    </article>
+    {% endif %}
+
+    <form method="post" action="/onboarding/mqtt">
+        <div class="field">
+            <label class="label" for="mqttServerUri">MQTT broker URI</label>
+            <div class="control">
+                <input id="mqttServerUri" class="input is-medium" type="text" name="mqttServerUri" value="{{ mqttServerUri }}" placeholder="tcp://localhost:1883" autocomplete="off">
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label" for="mqttClientId">MQTT client ID</label>
+            <div class="control">
+                <input id="mqttClientId" class="input is-medium" type="text" name="mqttClientId" value="{{ mqttClientId }}" placeholder="javaclaw-mqtt" autocomplete="off">
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label" for="mqttUsername">MQTT username</label>
+            <div class="control">
+                <input id="mqttUsername" class="input is-medium" type="text" name="mqttUsername" value="{{ mqttUsername }}" placeholder="Optional username" autocomplete="off">
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label" for="mqttPassword">MQTT password</label>
+            <div class="control">
+                <input id="mqttPassword" class="input is-medium" type="password" name="mqttPassword" value="{{ mqttPassword }}" placeholder="Optional password" autocomplete="off">
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label" for="mqttInstructionTopic">Instruction topic</label>
+            <div class="control">
+                <input id="mqttInstructionTopic" class="input is-medium" type="text" name="mqttInstructionTopic" value="{{ mqttInstructionTopic }}" placeholder="agents/instructions" autocomplete="off">
+            </div>
+            <p class="help">The plugin subscribes to this one topic and treats every received payload as an instruction.</p>
+        </div>
+
+        <div class="field">
+            <label class="label" for="mqttReplyTopicPrefix">Default reply topic</label>
+            <div class="control">
+                <input id="mqttReplyTopicPrefix" class="input is-medium" type="text" name="mqttReplyTopicPrefix" value="{{ mqttReplyTopicPrefix }}" placeholder="agents/replies" autocomplete="off">
+            </div>
+            <p class="help">Replies go here unless the instruction payload provides a first-line <code>reply-topic:</code> override.</p>
+        </div>
+
+        <div class="notification is-light mt-4">
+            <p class="has-text-weight-semibold mb-2">Stored properties</p>
+            <p class="has-text-grey-dark">agent.channels.mqtt.server-uri</p>
+            <p class="has-text-grey-dark">agent.channels.mqtt.client-id</p>
+            <p class="has-text-grey-dark">agent.channels.mqtt.username</p>
+            <p class="has-text-grey-dark">agent.channels.mqtt.password</p>
+            <p class="has-text-grey-dark">agent.channels.mqtt.instruction-topic</p>
+            <p class="has-text-grey-dark">agent.channels.mqtt.reply-topic-prefix</p>
+        </div>
+
+        <div class="buttons mt-4">
+            <a class="button is-light is-medium" href="{{ previousStepUrl }}">Back</a>
+            <button class="button is-primary is-medium" type="submit">Continue</button>
+            {% if isOptional %}<a class="button is-ghost is-medium" href="{{ nextStepUrl }}">Skip</a>{% endif %}
+            <span class="button is-ghost is-medium htmx-indicator">Saving...</span>
+        </div>
+    </form>
+</div>
